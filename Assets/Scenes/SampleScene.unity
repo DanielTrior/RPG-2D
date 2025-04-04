@@ -356,7 +356,6 @@ GameObject:
   - component: {fileID: 835136238}
   - component: {fileID: 835136237}
   - component: {fileID: 835136236}
-  - component: {fileID: 835136235}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -364,35 +363,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &835136235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835136234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4fab25ee83cbe440a19e33cdd03bee5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 8
-  jumpForce: 12
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  groundCheck: 1.26
-  numberOfJumps: 2
-  currentNumberOfJumps: 0
-  dashDuration: 0.3
-  dashTime: 0
-  dashSpeed: 25
-  dashCooldown: 0.5
-  dashCooldownTime: 0
-  isAttacking: 0
-  comboCounter: 0
-  comboTime: 1
-  comboTimeWindow: 0
 --- !u!70 &835136236
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -720,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83de0c5458fc724792a424dc9c77b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
