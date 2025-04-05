@@ -162,9 +162,4 @@ public class PlayerTest : MonoBehaviour
         anim.SetBool("isAttacking", isAttacking); // Set the attacking state
         anim.SetInteger("comboCounter", comboCounter); // Set the attack combo counter
     } 
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheck); // Draw a line to visualize the ground check
-    }
 }*/

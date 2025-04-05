@@ -5,8 +5,15 @@ public class Player : MonoBehaviour
     [Header("Move")]
     public float moveSpeed = 12;
     public float jumpForce = 12;
-    public int facingDir {get; private set;}
-    private bool facingRight = true;
+    public int facingDir {get; private set;} = 1;
+    public bool facingRight = true;
+    public float dashSpeed;
+    public float dashDuration;
+    public float dashDir {get; private set;}
+    [SerializeField] private float dashCooldown = 0.5f;
+    [SerializeField] public float dashUsageTimer;
+    public int maxJumps = 1;
+    public int currentJumps = 0;
 
     [Header("Collision info")]
     [SerializeField] private Transform groundCheck;
@@ -26,6 +33,8 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerAirState airState { get; private set; }
     public PlayerJumpState jumpState {get; private set;}
+    public PlayerDashState dashState { get; private set; }
+    public PlayerWallSlideState wallSlideState { get; private set; }
     #endregion
 
     private void Awake()
@@ -34,7 +43,9 @@ public class Player : MonoBehaviour
         idleState = new PlayerIdleState(stateMachine, this, "Idle");
         moveState = new PlayerMoveState(stateMachine, this, "Move");
         jumpState = new PlayerJumpState(stateMachine, this, "Jump");
-        airState = new PlayerAirState(stateMachine, this, "Jump");    
+        airState = new PlayerAirState(stateMachine, this, "Jump");
+        dashState = new PlayerDashState(stateMachine, this, "Dash");   
+        wallSlideState = new PlayerWallSlideState(stateMachine, this, "WallSlide"); 
     }
  
     private void Start()
@@ -46,8 +57,35 @@ public class Player : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
         stateMachine.currentState.Update();
+        CheckForDashInput();
+        if(isGroundDetected() && !Input.GetKey(KeyCode.Space)) // If the player is on the ground and not jumping
+            currentJumps = maxJumps; // Reset the jump count when on the ground
+    }
+
+    private void CheckForDashInput()
+    {
+        if(isGroundDetected())
+            dashUsageTimer -= Time.deltaTime * 2; // Reset the cooldown timer if on ground
+        dashUsageTimer -= Time.deltaTime;
+
+        if(Input.GetKeyDown(KeyCode.LeftShift) && dashUsageTimer <= 0)
+        {
+            dashUsageTimer = dashCooldown; // Reset the cooldown timer
+
+            dashDir = Input.GetAxis("Horizontal");
+
+            if(dashDir == 0)
+                dashDir = facingDir; // If no input, use the current facing direction
+
+            stateMachine.ChangeState(dashState);
+        }
+    }
+
+    public void ResetDash()
+    {
+        dashUsageTimer = 0; // Reset the cooldown timer
     }
 
     public void SetVelocity(float _xVelocity, float _yVelocity)
@@ -57,6 +95,7 @@ public class Player : MonoBehaviour
     }
 
     public bool isGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDsitance, whatIsGround);
+    public bool isWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
 
     private void OnDrawGizmos()
     {

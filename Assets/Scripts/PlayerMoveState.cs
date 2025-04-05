@@ -26,5 +26,11 @@ public class PlayerMoveState : PlayerGroundedState
 
         if(xInput == 0)
             player.stateMachine.ChangeState(player.idleState);
+
+        if(player.isWallDetected())
+            if(player.facingDir < 0 && xInput < 0)
+                player.stateMachine.ChangeState(player.idleState);
+            else if(player.facingDir > 0 && xInput > 0)
+                player.stateMachine.ChangeState(player.idleState);
     }
 }
