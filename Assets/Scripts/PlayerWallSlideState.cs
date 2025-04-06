@@ -24,11 +24,16 @@ public class PlayerWallSlideState : PlayerState
     {
         base.Update();
 
-        if(!player.isWallDetected() )
+        if(Input.GetKey(KeyCode.Space)) //If player presses space, change to jump state
+        {
+            playerStateMachine.ChangeState(player.wallJumpState);
+            return;
+        }
+        if(!player.isWallDetected() ) //If player is not on the wall, change to idle state
             playerStateMachine.ChangeState(player.idleState);
             
 
-        if(xInput != 0 && player.facingDir != xInput)
+        if(xInput != 0 && player.facingDir != xInput) //If player is moving in the opposite direction of the wall, change to idle state
         {
             if(player.facingDir < 0 && xInput > 0)
                 playerStateMachine.ChangeState(player.idleState);
@@ -36,12 +41,12 @@ public class PlayerWallSlideState : PlayerState
                 playerStateMachine.ChangeState(player.idleState); 
         }
 
-        if(yInput < 0)
+        if(yInput < 0) //If player is moving down, apply downward velocity
             rb.velocity = new Vector2(0, rb.velocity.y * 0.990f);
-        else
+        else //If player is not moving down, apply reduced downward velocity
             rb.velocity = new Vector2(0, rb.velocity.y * .7f);
 
-        if (player.isGroundDetected())
+        if (player.isGroundDetected()) //If player is on the ground, change to idle state
             playerStateMachine.ChangeState(player.idleState);
     }
 }

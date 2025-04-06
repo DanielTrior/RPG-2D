@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class PlayerState
 {
-    protected PlayerStateMachine playerStateMachine;
+    protected PlayerStateMachine playerStateMachine;    
     protected Player player;
     protected Rigidbody2D rb;
 
     protected float xInput;
     protected float yInput;
-    private string animBoolName;
+    protected string animBoolName;  //animation name for animator controller
+    protected float stateTimer; //timer for state duration
 
-    protected float stateTimer;
+    protected bool triggerCalled; //trigger for attack animation
 
     public PlayerState(PlayerStateMachine _playerStateMachine, Player _player, string _animBoolName)
     {
@@ -25,19 +26,25 @@ public class PlayerState
     {
         player.animator.SetBool(animBoolName, true);
         rb = player.rb;
+        triggerCalled = false;
     }
 
     public virtual void Exit()
     {
-        player.animator.SetBool(animBoolName, false);
+         player.animator.SetBool(animBoolName, false);
     }
     public virtual void Update()
     {
         stateTimer -= Time.deltaTime;
+        
         xInput = Input.GetAxis("Horizontal");
         yInput = Input.GetAxis("Vertical");
 
-        player.animator.SetFloat("yVelocity", rb.velocity.y);
+        player.animator.SetFloat("yVelocity", rb.velocity.y);   
     }
 
+    public virtual void AnimationFinishTrigger()    // Trigger for animation finish event
+    {
+        triggerCalled = true;
+    }
 }

@@ -23,22 +23,22 @@ public class PlayerAirState : PlayerState
     {
         base.Update();
 
-        if(Input.GetKeyDown(KeyCode.Space) && player.currentJumps > 0)
+        if(Input.GetKeyDown(KeyCode.Space) && player.currentJumps > 0) //If player presses space and has jumps left, change to jump state
         {
             player.currentJumps--;
             player.stateMachine.ChangeState(player.jumpState);
         }
 
-        if(player.isWallDetected())
+        if(player.isWallDetected()) //If player is on the wall, change to wall slide state
             player.stateMachine.ChangeState(player.wallSlideState);
 
-        if(player.isGroundDetected())
+        if(player.isGroundDetected()) //If player is on the ground, change to idle state
         {
             player.ResetDash();
             player.stateMachine.ChangeState(player.idleState);
         }
 
-        if (xInput != 0)
+        if (xInput != 0) // If player is moving in the air, apply air control
         {
             float airControlFactor = 0.7f; // Adjust this value to control air movement responsiveness
             player.SetVelocity(player.moveSpeed * airControlFactor * xInput, rb.velocity.y);

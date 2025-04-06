@@ -11,8 +11,8 @@ public class PlayerJumpState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        player.ResetDash();
-        rb.velocity = new Vector2(rb.velocity.x, player.jumpForce);
+        player.ResetDash(); // Reset dash count when jumping
+        rb.velocity = new Vector2(rb.velocity.x, player.jumpForce);  // Apply jump force to the player
     }
 
     override public void Exit()
@@ -24,19 +24,19 @@ public class PlayerJumpState : PlayerState
     {
         base.Update(); 
 
-        if(Input.GetKeyDown(KeyCode.Space) && player.currentJumps > 0)
+        if(Input.GetKeyDown(KeyCode.Space) && player.currentJumps > 0) // If player presses space and has jumps left, change to jump state
         {
             player.currentJumps--;
             player.stateMachine.ChangeState(player.jumpState);
         }
 
-        if (xInput != 0)
+        if (xInput != 0) // If player is moving in the air, apply air control
         {
             float airControlFactor = 0.7f; // Adjust this value to control air movement responsiveness
             player.SetVelocity(player.moveSpeed * airControlFactor * xInput, rb.velocity.y);
         }
 
-        if(rb.velocity.y < 0)
+        if(rb.velocity.y < 0) // If player is falling, change to air state
         {
             player.stateMachine.ChangeState(player.airState);
         }

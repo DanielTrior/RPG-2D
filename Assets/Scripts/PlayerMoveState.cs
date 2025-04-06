@@ -22,12 +22,12 @@ public class PlayerMoveState : PlayerGroundedState
     {
         base.Update();
 
-        player.SetVelocity(xInput * player.moveSpeed, rb.velocity.y);
+        player.SetVelocity(xInput * player.moveSpeed, rb.velocity.y); //Set player velocity based on input and speed
 
-        if(xInput == 0)
+        if(xInput == 0) //If player is not moving, change to idle state
             player.stateMachine.ChangeState(player.idleState);
 
-        if(player.isWallDetected())
+        if(player.isWallDetected()) //If player is on the wall, change to idle slide state
             if(player.facingDir < 0 && xInput < 0)
                 player.stateMachine.ChangeState(player.idleState);
             else if(player.facingDir > 0 && xInput > 0)
